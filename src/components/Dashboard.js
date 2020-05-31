@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 const DashBoard = (props) => {
-    const { users, questions, authedUser } = props
+    const { users, questions, authedUser, history } = props
     const classes = useStyles()
     const [QuestionsType, setQuestionsType] = useState('unanswered')
     const matchQuestion = QuestionsType === 'unanswered'
@@ -52,6 +52,10 @@ const DashBoard = (props) => {
     const handleOnClick = (e) => {
         e.preventDefault()
         setQuestionsType(QuestionsType === 'unanswered' ? 'answered' : 'unanswered')
+    }
+    const toPoll = (e, id) => {
+        e.preventDefault()
+        history.push(`/questions/${id}`)
     }
     return (
         <div className={classes.root}>
@@ -64,11 +68,6 @@ const DashBoard = (props) => {
                 <List>
                     {matchQuestion.map((question) => (
                         <ListItem key={questions[question].id}>
-                            {/* <Paper elevation={3} className={classes.question}>
-                                <Avatar src={users[questions[question].author].avatarURL}
-                                    alt={`Avatar of ${questions[question].author}`} variant='square' />
-                                <span>{questions[question].id}</span>
-                            </Paper> */}
                             <Paper className={classes.paper}>
                                 <Grid container spacing={2}>
                                     <Grid item>
@@ -92,7 +91,7 @@ const DashBoard = (props) => {
                                             </Grid>
                                             <Grid item>
                                                 <Typography variant="body2" style={{ marginBottom: '10px' }}>
-                                                    <Button variant="contained" color="primary">
+                                                    <Button variant="contained" color="primary" onClick={(e) => toPoll(e, questions[question].id)}>
                                                         View Poll
                                                     </Button>
                                                 </Typography>
@@ -109,10 +108,10 @@ const DashBoard = (props) => {
     )
 }
 
-const mapStateToProps = ({ users, questions, authedUser}) => ({
-                users,
-                questions,
-                authedUser
-            })
+const mapStateToProps = ({ users, questions, authedUser }) => ({
+    users,
+    questions,
+    authedUser
+})
 
 export default connect(mapStateToProps)(DashBoard)

@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
 
 function ButtonAppBar(props) {
     const classes = useStyles();
-    const { authedUser, users } = props
+    const { authedUser, users, history } = props
     const [openDrawer, setDrawer] = useState(false)
     const handleDrawer = (e) => {
         e.preventDefault()
@@ -54,6 +54,10 @@ function ButtonAppBar(props) {
         e.preventDefault()
         const { dispatch } = props
         dispatch(setAuthedUser(null))
+    }
+    const toHome = (e) => {
+        e.preventDefault()
+        history.push('/')
     }
     return (
         <div className={classes.root}>
@@ -77,7 +81,7 @@ function ButtonAppBar(props) {
             <Drawer anchor='left' open={openDrawer} onClose={handleDrawer}>
                 <div className={classes.list}>
                     <List>
-                        <ListItem button>
+                        <ListItem button onClick={toHome}>
                             <ListItemIcon><Home /></ListItemIcon>
                             <ListItemText primary='Home' />
                         </ListItem>

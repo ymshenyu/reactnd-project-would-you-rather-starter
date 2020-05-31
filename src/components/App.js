@@ -4,6 +4,8 @@ import { handleInitialData } from '../actions/shared'
 import Nav from './Nav'
 import Auth from './Auth'
 import Dashboard from './Dashboard'
+import Poll from './Poll'
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
 
 class App extends Component {
     componentDidMount() {
@@ -13,10 +15,20 @@ class App extends Component {
         const { authedUser } = this.props
         return (
             <Fragment>
-                <Nav />
-                {authedUser === null
-                    ? <Auth />
-                    : <Dashboard />}
+                <Router>
+                    <Route component={Nav} />
+                    {authedUser === null
+                    ?
+                    <div>
+                        <Redirect to={{ pathname: '/' }} />
+                        <Route path='/' component={Auth} />
+                    </div> 
+                    :
+                    <div>
+                        <Route path='/' exact component={Dashboard} />
+                        <Route path='/questions/:id' component={Poll} />
+                    </div>}
+                </Router>
             </Fragment>
         )
     }
