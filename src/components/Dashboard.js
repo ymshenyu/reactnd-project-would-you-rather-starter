@@ -21,6 +21,10 @@ const useStyles = makeStyles((theme) => ({
             flexDirection: 'column',
             margin: theme.spacing(1),
             width: '40vw',
+            '@media (max-width:1024px)': {
+                width: '100vw',
+                height: '100vh'
+            },
         }
     },
     question: {
@@ -89,7 +93,7 @@ const DashBoard = (props) => {
                                             <Grid item>
                                                 <Typography variant="body2" style={{ marginBottom: '10px' }}>
                                                     <Button variant="contained" color="primary">
-                                                        View
+                                                        View Poll
                                                     </Button>
                                                 </Typography>
                                             </Grid>
