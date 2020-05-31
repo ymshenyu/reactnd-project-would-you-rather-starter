@@ -66,7 +66,7 @@ function ButtonAppBar(props) {
                     {authedUser !== null
                         ?
                         <div className={classes.center}>
-                            <Avatar className={classes.space} alt={users[authedUser].name} src={users[authedUser].avatarURL} />
+                            <Avatar className={classes.space} alt={`Avatar of ${users[authedUser].name}`} src={users[authedUser].avatarURL} />
                             <Typography variant='h6' className={classes.space}>
                                 {users[authedUser].name}
                             </Typography>
