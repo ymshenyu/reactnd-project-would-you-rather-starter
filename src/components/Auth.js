@@ -18,8 +18,12 @@ const useStyles = makeStyles((theme) => ({
             display: 'flex',
             flexDirection: 'column',
             margin: theme.spacing(1),
-            width: '40vw',
-            height: '80vh'
+            width: '30vw',
+            height: '70vh',
+            '@media (max-width:1024px)': {
+                width: '100vw',
+                height: '100vh'
+            },
         }
     }
 }))

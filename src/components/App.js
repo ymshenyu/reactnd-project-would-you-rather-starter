@@ -1,8 +1,9 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { handleInitialData } from '../actions/shared'
 import Nav from './Nav'
 import Auth from './Auth'
+import Dashboard from './Dashboard'
 
 class App extends Component {
     componentDidMount() {
@@ -11,12 +12,12 @@ class App extends Component {
     render() {
         const { authedUser } = this.props
         return (
-            <div>
+            <Fragment>
                 <Nav />
-                {authedUser === null && (
-                    <Auth />
-                )}
-            </div>
+                {authedUser === null
+                    ? <Auth />
+                    : <Dashboard />}
+            </Fragment>
         )
     }
 }
