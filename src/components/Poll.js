@@ -11,6 +11,9 @@ import RadioGroup from '@material-ui/core/RadioGroup'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import FormControl from '@material-ui/core/FormControl'
 import FormLabel from '@material-ui/core/FormLabel'
+import { handleSaveAnswer } from '../actions/shared'
+import LinearProgress from '@material-ui/core/LinearProgress'
+import MuiAlert from '@material-ui/lab/Alert'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -37,48 +40,106 @@ const useStyles = makeStyles((theme) => ({
     },
     paper: {
         width: '100%'
+    },
+    center: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 }))
 
 
 const Poll = (props) => {
-    const { users, question, authedUser } = props
+    const { users, question, authedUser, dispatch } = props
     const classes = useStyles()
-    const [value, setValue] = React.useState(question.optionOne.text)
-    const handleChange = (event) => {
-        setValue(event.target.value)
+    const [answer, setAnswer] = useState('optionOne')
+    const percentage = (option) => {
+        const total = question.optionOne.votes.length + question.optionTwo.votes.length
+        const obtained = question[option].votes.length
+        return obtained * 100 / total
     }
+    const handleChange = (event) => {
+        setAnswer(event.target.value)
+    }
+    const handleOnClick = (e) => {
+        e.preventDefault()
+        dispatch(handleSaveAnswer(question.id, answer))
+    }
+    if (question === null) {
+        return (
+            <Typography gutterBottom variant="h2" style={{ textAlign: 'center' }}>
+                This Question doesn't exist
+            </Typography>
+        )
+    }
+    const isAnswered = users[authedUser].answers.hasOwnProperty(question.id)
     return (
         <div className={classes.root}>
             <Paper>
                 <Grid container spacing={2}>
-                    <Grid item>
-                        <Avatar src={users[authedUser].avatarURL}
-                            alt={`Avatar of ${question.author}`} variant='square'
-                            className={classes.avatar}
-                        />
+                    <Grid item className={classes.center}>
+                        <Paper elevation={3}>
+                            <Avatar src={users[authedUser].avatarURL}
+                                alt={`Avatar of ${question.author}`} variant='square'
+                                className={classes.avatar}
+                            />
+                        </Paper>
                     </Grid>
                     <Grid item xs={12} sm container>
                         <Grid item xs container direction="column" spacing={2}>
                             <Grid item xs>
-                                <Typography gutterBottom variant="subtitle1">
+                                <Typography gutterBottom variant="h4">
                                     {users[authedUser].name} asks:
                                 </Typography>
-                                <FormControl component="fieldset">
-                                    <FormLabel component="legend">Would You Rather ...</FormLabel>
-                                    <RadioGroup aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                                        <FormControlLabel value={question.optionOne.text} control={<Radio />} label={question.optionOne.text} />
-                                        <FormControlLabel value={question.optionTwo.text} control={<Radio />} label={question.optionTwo.text} />
-                                    </RadioGroup>
-                                </FormControl>
+                                {isAnswered
+                                    ? (
+                                        <div>
+                                            <Typography gutterBottom variant="h3">
+                                                Results:
+                                            </Typography>
+                                            {['optionOne', 'optionTwo'].map(option => (
+                                                <Paper key={option} elevation={3}>
+                                                    {option === answer &&
+                                                        <MuiAlert elevation={6} variant="filled" severity="success">
+                                                            Your vote
+                                                        </MuiAlert>}
+                                                    <h3>Would you rather {question[option].text}?</h3>
+                                                    <Typography gutterBottom variant="subtitle1" style={{ textAlign: 'center' }}>
+                                                        {Math.ceil(percentage(option))}%
+                                                    </Typography>
+                                                    <LinearProgress variant='determinate' value={percentage(option)} />
+                                                    <Typography gutterBottom variant="subtitle1" style={{ textAlign: 'center' }}>
+                                                        {question[option].votes.length} out of {question.optionOne.votes.length + question.optionTwo.votes.length} votes
+                                                    </Typography>
+                                                </Paper>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <FormControl component="fieldset">
+                                            <FormLabel component="legend">Would You Rather ...</FormLabel>
+                                            <RadioGroup aria-label="Would You Rather" name="Would You Rather" value={answer} onChange={handleChange}>
+                                                {['optionOne', 'optionTwo'].map(option => (
+                                                    <FormControlLabel value={option} control={<Radio />}
+                                                        label={question[option].text} key={option} />
+                                                ))}
+                                            </RadioGroup>
+                                        </FormControl>
+                                    )
+                                }
                             </Grid>
-                            <Grid item>
-                                <Typography variant="body2" style={{ marginBottom: '10px' }}>
-                                    <Button variant="contained" color="primary">
-                                        Submit
-                                    </Button>
-                                </Typography>
-                            </Grid>
+                            {isAnswered
+                                ? (
+                                    null
+                                ) : (
+                                    <Grid item>
+                                        <Typography variant="body2" style={{ marginBottom: '10px' }}>
+                                            <Button variant="contained" color="primary" onClick={handleOnClick}>
+                                                Submit
+                                            </Button>
+                                        </Typography>
+                                    </Grid>
+                                )
+                            }
                         </Grid>
                     </Grid>
                 </Grid>
@@ -89,7 +150,7 @@ const Poll = (props) => {
 
 const mapStateToProps = ({ users, questions, authedUser }, { match }) => ({
     users,
-    question: questions[match.params.id],
+    question: questions[match.params.id] ? questions[match.params.id] : null,
     authedUser
 })
 

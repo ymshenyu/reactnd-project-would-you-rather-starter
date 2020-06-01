@@ -54,6 +54,7 @@ function ButtonAppBar(props) {
         e.preventDefault()
         const { dispatch } = props
         dispatch(setAuthedUser(null))
+        history.push('/')
     }
     const toHome = (e) => {
         e.preventDefault()
