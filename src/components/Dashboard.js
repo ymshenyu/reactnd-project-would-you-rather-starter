@@ -108,7 +108,7 @@ const DashBoard = (props) => {
 
 const mapStateToProps = ({ users, questions, authedUser }) => ({
     users,
-    questions: Object.entries(questions).map(([key, value]) => value).sort((a, b) => b.timestamp - a.timestamp),
+    questions: Object.values(questions).sort((a, b) => b.timestamp - a.timestamp),
     authedUser
 })
 

@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
     center: {
         display: 'flex',
         alignItems: 'center'
-}
+    }
 }))
 
 const LeaderBoard = (props) => {
@@ -57,7 +57,7 @@ const LeaderBoard = (props) => {
 }
 
 const mapStateToProps = ({ users }) => ({
-    users: Object.entries(users).map(([key, value]) => value)
+    users: Object.values(users)
         .sort((a, b) => (b.questions.length + Object.keys(b['answers']).length) - (a.questions.length + Object.keys(a['answers']).length)),
 })
 
