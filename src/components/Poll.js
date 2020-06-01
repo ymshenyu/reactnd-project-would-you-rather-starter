@@ -52,7 +52,8 @@ const useStyles = makeStyles((theme) => ({
 const Poll = (props) => {
     const { users, question, authedUser, dispatch } = props
     const classes = useStyles()
-    const [answer, setAnswer] = useState('optionOne')
+    const isAnswered = question !== null && users[authedUser].answers.hasOwnProperty(question.id)
+    const [answer, setAnswer] = useState(isAnswered ? users[authedUser].answers[question.id] : 'optionOne')
     const percentage = (option) => {
         const total = question.optionOne.votes.length + question.optionTwo.votes.length
         const obtained = question[option].votes.length
@@ -72,14 +73,13 @@ const Poll = (props) => {
             </Typography>
         )
     }
-    const isAnswered = users[authedUser].answers.hasOwnProperty(question.id)
     return (
         <div className={classes.root}>
             <Paper>
                 <Grid container spacing={2}>
                     <Grid item className={classes.center}>
                         <Paper elevation={3}>
-                            <Avatar src={users[authedUser].avatarURL}
+                            <Avatar src={users[question.author].avatarURL}
                                 alt={`Avatar of ${question.author}`} variant='square'
                                 className={classes.avatar}
                             />
@@ -89,7 +89,7 @@ const Poll = (props) => {
                         <Grid item xs container direction="column" spacing={2}>
                             <Grid item xs>
                                 <Typography gutterBottom variant="h4">
-                                    {users[authedUser].name} asks:
+                                    {users[question.author].name} asks:
                                 </Typography>
                                 {isAnswered
                                     ? (
