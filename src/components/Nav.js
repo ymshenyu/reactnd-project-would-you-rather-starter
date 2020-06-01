@@ -60,6 +60,10 @@ function ButtonAppBar(props) {
         e.preventDefault()
         history.push('/')
     }
+    const toAdd = (e) => {
+        e.preventDefault()
+        history.push('/add')
+    }
     return (
         <div className={classes.root}>
             <AppBar position="static">
@@ -86,7 +90,7 @@ function ButtonAppBar(props) {
                             <ListItemIcon><Home /></ListItemIcon>
                             <ListItemText primary='Home' />
                         </ListItem>
-                        <ListItem button>
+                        <ListItem button onClick={toAdd}>
                             <ListItemIcon><Add /></ListItemIcon>
                             <ListItemText primary='New Question' />
                         </ListItem>
