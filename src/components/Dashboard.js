@@ -44,13 +44,9 @@ const DashBoard = (props) => {
     const { users, questions, authedUser, history } = props
     const classes = useStyles()
     const [QuestionsType, setQuestionsType] = useState('unanswered')
-    const formatQuestions = () => {
-        const matchQuestions = QuestionsType === 'unanswered'
-            ? Object.keys(questions).filter(question => !users[authedUser].answers.hasOwnProperty(question))
-            : Object.keys(questions).filter(question => users[authedUser].answers.hasOwnProperty(question))
-        const sortQuestions = matchQuestions.map(question => questions[question]).sort((a, b) => b.timestamp - a.timestamp)
-        return sortQuestions
-    }
+    const matchQuestions = QuestionsType === 'unanswered'
+        ? questions.filter(question => !users[authedUser].answers.hasOwnProperty(question.id))
+        : questions.filter(question => users[authedUser].answers.hasOwnProperty(question.id))
     const handleOnClick = (e) => {
         e.preventDefault()
         setQuestionsType(QuestionsType === 'unanswered' ? 'answered' : 'unanswered')
@@ -68,7 +64,7 @@ const DashBoard = (props) => {
                     <Button disabled={QuestionsType === 'answered'} onClick={handleOnClick}>answered Questions</Button>
                 </ButtonGroup>
                 <List>
-                    {formatQuestions().map((question) => (
+                    {matchQuestions.map((question) => (
                         <ListItem key={question.id}>
                             <Paper className={classes.paper}>
                                 <Grid container spacing={2}>
@@ -112,7 +108,7 @@ const DashBoard = (props) => {
 
 const mapStateToProps = ({ users, questions, authedUser }) => ({
     users,
-    questions,
+    questions: Object.entries(questions).map(([key, value]) => value).sort((a, b) => b.timestamp - a.timestamp),
     authedUser
 })
 

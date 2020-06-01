@@ -6,6 +6,7 @@ import Auth from './Auth'
 import Dashboard from './Dashboard'
 import Poll from './Poll'
 import NewPoll from './NewPoll'
+import LeaderBoard from './LeaderBoard'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 class App extends Component {
@@ -28,6 +29,7 @@ class App extends Component {
                                 <Route path='/' exact component={Dashboard} />
                                 <Route path='/questions/:id' component={Poll} />
                                 <Route path='/add' component={NewPoll} />
+                                <Route path='/leaderboard' component={LeaderBoard} />
                             </div>
                         )
                     }

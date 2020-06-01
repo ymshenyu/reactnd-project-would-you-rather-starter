@@ -64,6 +64,10 @@ function ButtonAppBar(props) {
         e.preventDefault()
         history.push('/add')
     }
+    const toLeaderBoard = (e) => {
+        e.preventDefault()
+        history.push('/leaderboard')
+    }
     return (
         <div className={classes.root}>
             <AppBar position="static">
@@ -94,7 +98,7 @@ function ButtonAppBar(props) {
                             <ListItemIcon><Add /></ListItemIcon>
                             <ListItemText primary='New Question' />
                         </ListItem>
-                        <ListItem button>
+                        <ListItem button onClick={toLeaderBoard}>
                             <ListItemIcon><BarChart /></ListItemIcon>
                             <ListItemText primary='Leader Board' />
                         </ListItem>
